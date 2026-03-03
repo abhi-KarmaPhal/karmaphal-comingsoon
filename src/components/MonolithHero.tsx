@@ -1,9 +1,8 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
-import { subscribeEmail } from "@/app/actions/subscribe";
 import SacredGeometry from "./SacredGeometry";
 import ServiceTeaser from "./ServiceTeaser";
 import MagneticButton from "./MagneticButton";
@@ -97,21 +96,34 @@ export default function MonolithHero() {
 
     setFormState("loading");
     try {
-      const formData = new FormData();
-      formData.append("email", email);
-      // Honeypot field (value from hidden input)
+      // Client-side Honeypot Check (catches simple bots immediately)
       const form = e.target as HTMLFormElement;
       const honeypotInput = form.querySelector('input[name="website"]') as HTMLInputElement;
-      if (honeypotInput) formData.append("website", honeypotInput.value);
-
-      const result = await subscribeEmail(formData);
-      if (result.type === "success" || result.type === "bot") {
+      if (honeypotInput && honeypotInput.value) {
         setFormState("success");
-        setFormMessage(result.message);
+        setFormMessage("You're on the list!");
         setEmail("");
-      } else if (result.type === "duplicate") {
-        setFormState("duplicate");
-        setFormMessage(result.message);
+        return;
+      }
+
+      // Hit the standard API Route instead of a Server Action
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "coming-soon", ip_address: "" }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        if (result.type === "duplicate") {
+          setFormState("duplicate");
+          setFormMessage(result.message);
+        } else {
+          setFormState("success");
+          setFormMessage(result.message || "You're on the list!");
+          setEmail("");
+        }
       } else {
         setFormState("error");
         setFormMessage(result.message);
