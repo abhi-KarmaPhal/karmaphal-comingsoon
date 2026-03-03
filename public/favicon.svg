@@ -1,0 +1,14 @@
+<svg width="32" height="32" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF" />
+      <stop offset="25%" style="stop-color:#F9E2AF" />
+      <stop offset="55%" style="stop-color:#D4AF37" />
+      <stop offset="100%" style="stop-color:#8A6D3B" />
+    </linearGradient>
+  </defs>
+  <!-- TRADITIONAL KA GEOMETRY -->
+  <g transform="translate(500, 500) scale(1.1)">
+    <text text-anchor="middle" font-family="Gotu, sans-serif" font-size="800" y="300" fill="url(#gold)">क</text>
+  </g>
+</svg>

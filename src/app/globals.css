@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme {
+  --color-obsidian: #010101;
+  --color-molten-gold: #D4AF37;
+  --color-champagne: #F9E2AF;
+  --color-bronze: #8A6D3B;
+}
+
+:root {
+  --background: var(--color-obsidian);
+  --foreground: var(--color-champagne);
+}
+
+body {
+  background: var(--color-obsidian);
+  color: var(--color-foreground);
+  font-family: var(--font-cinzel);
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.gold-gradient {
+  background: linear-gradient(180deg, #F9E2AF 0%, #D4AF37 45%, #8A6D3B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+}

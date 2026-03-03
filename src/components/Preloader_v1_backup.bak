@@ -1,0 +1,179 @@
+"use client";
+
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+
+// Helper for animated SVG paths
+function AnimatedCircle({ cx, cy, r, delay, duration }: { cx: number; cy: number; r: number; delay: number; duration: number }) {
+  return (
+    <motion.circle
+      cx={cx} cy={cy} r={r}
+      fill="none" stroke="#D4AF37" strokeWidth="0.8"
+      initial={{ pathLength: 0, opacity: 0 }}
+      animate={{ pathLength: 1, opacity: 1 }}
+      transition={{ duration, delay, ease: "easeInOut" }}
+    />
+  );
+}
+
+function AnimatedLine({ x1, y1, x2, y2, delay, duration }: { x1: number; y1: number; x2: number; y2: number; delay: number; duration: number }) {
+  return (
+    <motion.line
+      x1={x1} y1={y1} x2={x2} y2={y2}
+      stroke="#D4AF37" strokeWidth="0.5"
+      initial={{ pathLength: 0, opacity: 0 }}
+      animate={{ pathLength: 1, opacity: 1 }}
+      transition={{ duration, delay, ease: "easeInOut" }}
+    />
+  );
+}
+
+function AnimatedPolygon({ points, delay, duration }: { points: string; delay: number; duration: number }) {
+  return (
+    <motion.polygon
+      points={points}
+      fill="none" stroke="#D4AF37" strokeWidth="0.6"
+      initial={{ pathLength: 0, opacity: 0 }}
+      animate={{ pathLength: 1, opacity: 1 }}
+      transition={{ duration, delay, ease: "easeInOut" }}
+    />
+  );
+}
+
+function AnimatedEllipse({ cx, cy, rx, ry, rotation, delay, duration }: { cx: number; cy: number; rx: number; ry: number; rotation: number; delay: number; duration: number }) {
+  return (
+    <motion.ellipse
+      cx={cx} cy={cy} rx={rx} ry={ry}
+      fill="none" stroke="#D4AF37" strokeWidth="0.5"
+      transform={`rotate(${rotation} 500 500)`}
+      initial={{ pathLength: 0, opacity: 0 }}
+      animate={{ pathLength: 1, opacity: 1 }}
+      transition={{ duration, delay, ease: "easeInOut" }}
+    />
+  );
+}
+
+export default function Preloader() {
+  const [phase, setPhase] = useState<"draw" | "flash" | "collapse" | "done">("draw");
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setPhase("flash"), 3000);
+    const t2 = setTimeout(() => setPhase("collapse"), 3500);
+    const t3 = setTimeout(() => setPhase("done"), 4500);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, []);
+
+  if (phase === "done") return null;
+
+  return (
+    <AnimatePresence>
+      {phase !== "done" && (
+        <motion.div
+          className="fixed inset-0 z-[999] bg-[#010101] flex items-center justify-center"
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
+        >
+          {/* THE GOLDEN SHOCKWAVE (on collapse) */}
+          {phase === "collapse" && (
+            <motion.div
+              className="absolute rounded-full border border-[#D4AF37]"
+              initial={{ width: 20, height: 20, opacity: 0.8 }}
+              animate={{ width: "200vmax", height: "200vmax", opacity: 0 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              style={{ boxShadow: "0 0 60px rgba(212,175,55,0.5), inset 0 0 60px rgba(212,175,55,0.3)" }}
+            />
+          )}
+
+          {/* THE GENESIS SVG */}
+          <motion.div
+            className="w-[70vmin] h-[70vmin] max-w-[500px] max-h-[500px]"
+            animate={
+              phase === "flash"
+                ? { filter: "brightness(3) drop-shadow(0 0 60px rgba(212,175,55,0.8))" }
+                : phase === "collapse"
+                ? { scale: 0, opacity: 0, filter: "brightness(1)" }
+                : {}
+            }
+            transition={
+              phase === "flash"
+                ? { duration: 0.4 }
+                : phase === "collapse"
+                ? { duration: 0.6, ease: [0.76, 0, 0.24, 1] }
+                : {}
+            }
+          >
+            <svg viewBox="0 0 1000 1000" className="w-full h-full">
+              {/* PHASE 1: THE ORIGIN POINT (0s) */}
+              <motion.circle
+                cx="500" cy="500" r="4"
+                fill="#D4AF37"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0 }}
+              />
+
+              {/* PHASE 2: CIRCLES EXPANDING (0.2s - 1.2s) */}
+              <AnimatedCircle cx={500} cy={500} r={80} delay={0.2} duration={0.6} />
+              <AnimatedCircle cx={500} cy={500} r={180} delay={0.4} duration={0.6} />
+              <AnimatedCircle cx={500} cy={500} r={280} delay={0.6} duration={0.5} />
+              <AnimatedCircle cx={500} cy={500} r={380} delay={0.8} duration={0.5} />
+              <AnimatedCircle cx={500} cy={500} r={470} delay={0.9} duration={0.4} />
+              <AnimatedCircle cx={500} cy={500} r={480} delay={1.0} duration={0.4} />
+
+              {/* PHASE 3: TRIANGLES (1.2s - 2.0s, accelerating) */}
+              <AnimatedPolygon points="500,120 820,700 180,700" delay={1.2} duration={0.5} />
+              <AnimatedPolygon points="500,880 180,300 820,300" delay={1.4} duration={0.45} />
+              <AnimatedPolygon points="500,200 740,640 260,640" delay={1.6} duration={0.4} />
+              <AnimatedPolygon points="500,800 260,360 740,360" delay={1.7} duration={0.35} />
+              <AnimatedPolygon points="500,280 660,580 340,580" delay={1.8} duration={0.3} />
+              <AnimatedPolygon points="500,720 340,420 660,420" delay={1.85} duration={0.3} />
+
+              {/* PHASE 4: CARDINAL & DIAGONAL LINES (2.0s - 2.4s, fast) */}
+              <AnimatedLine x1={500} y1={20} x2={500} y2={980} delay={2.0} duration={0.3} />
+              <AnimatedLine x1={20} y1={500} x2={980} y2={500} delay={2.1} duration={0.3} />
+              <AnimatedLine x1={146} y1={146} x2={854} y2={854} delay={2.2} duration={0.25} />
+              <AnimatedLine x1={854} y1={146} x2={146} y2={854} delay={2.25} duration={0.25} />
+
+              {/* PHASE 5: LOTUS PETALS (2.3s - 2.8s, rapid) */}
+              {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => (
+                <AnimatedEllipse key={`outer-${angle}`} cx={500} cy={350} rx={30} ry={100} rotation={angle} delay={2.3 + i * 0.05} duration={0.25} />
+              ))}
+              {[22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5].map((angle, i) => (
+                <AnimatedEllipse key={`inner-${angle}`} cx={500} cy={400} rx={20} ry={60} rotation={angle} delay={2.5 + i * 0.04} duration={0.2} />
+              ))}
+
+              {/* PHASE 6: BINDU GLOW (2.8s) */}
+              <motion.circle
+                cx="500" cy="500" r="8"
+                fill="#D4AF37"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.8 }}
+                transition={{ duration: 0.3, delay: 2.8 }}
+              />
+            </svg>
+          </motion.div>
+
+          {/* AMBIENT GLOW DURING DRAWING */}
+          <motion.div
+            className="absolute pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={
+              phase === "flash"
+                ? { opacity: 0.6, scale: 1.5 }
+                : phase === "collapse"
+                ? { opacity: 0, scale: 2 }
+                : { opacity: 0.15 }
+            }
+            transition={{ duration: phase === "flash" ? 0.3 : 1, delay: phase === "draw" ? 0.5 : 0 }}
+            style={{
+              width: "400px",
+              height: "400px",
+              background: "radial-gradient(circle, rgba(212,175,55,0.3) 0%, transparent 70%)",
+              filter: "blur(60px)",
+            }}
+          />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
