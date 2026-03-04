@@ -1,7 +1,12 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+
+// No-op handler: when passed as onUpdate, forces Framer Motion to use the JS
+// animation engine instead of WAAPI. Safari iOS has a compositor-layer-demotion
+// bug that causes a visible flash when WAAPI animations complete.
+const noop = () => { };
 
 /* ── LOW-END DEVICE DETECTION ── */
 function useIsLowEnd() {
@@ -21,6 +26,7 @@ function ACircle({ cx, cy, r, delay, duration, sw = 0.8 }: { cx: number; cy: num
       initial={{ pathLength: 0, opacity: 0 }}
       animate={{ pathLength: 1, opacity: 1 }}
       transition={{ duration, delay, ease: "easeInOut" }}
+      onUpdate={noop}
     />
   );
 }
@@ -31,6 +37,7 @@ function ALine({ x1, y1, x2, y2, delay, duration }: { x1: number; y1: number; x2
       initial={{ pathLength: 0, opacity: 0 }}
       animate={{ pathLength: 1, opacity: 1 }}
       transition={{ duration, delay, ease: "easeInOut" }}
+      onUpdate={noop}
     />
   );
 }
@@ -41,6 +48,7 @@ function APoly({ points, delay, duration }: { points: string; delay: number; dur
       initial={{ pathLength: 0, opacity: 0 }}
       animate={{ pathLength: 1, opacity: 1 }}
       transition={{ duration, delay, ease: "easeInOut" }}
+      onUpdate={noop}
     />
   );
 }
@@ -52,6 +60,7 @@ function AEllipse({ cx, cy, rx, ry, rot, delay, duration }: { cx: number; cy: nu
       initial={{ pathLength: 0, opacity: 0 }}
       animate={{ pathLength: 1, opacity: 1 }}
       transition={{ duration, delay, ease: "easeInOut" }}
+      onUpdate={noop}
     />
   );
 }
@@ -86,6 +95,7 @@ function Particles({ count }: { count: number }) {
             scale: 0,
           }}
           transition={{ duration: p.duration, ease: "easeOut" }}
+          onUpdate={noop}
           style={{ boxShadow: "0 0 4px #D4AF37" }}
         />
       ))}
@@ -137,6 +147,7 @@ function VerseCounter({ totalDuration, phase }: { totalDuration: number; phase: 
           ? { duration: 0.4 }
           : { duration: 0.5, delay: 0.2 }
       }
+      onUpdate={noop}
     >
       {/* THE VERSE */}
       <div className="flex flex-wrap justify-center gap-x-2 md:gap-x-3">
@@ -151,6 +162,7 @@ function VerseCounter({ totalDuration, phase }: { totalDuration: number; phase: 
               delay: wordDelays[i],
               ease: [0.22, 1, 0.36, 1],
             }}
+            onUpdate={noop}
             style={{ color: "#D4AF37" }}
           >
             {word}
@@ -164,6 +176,7 @@ function VerseCounter({ totalDuration, phase }: { totalDuration: number; phase: 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 3.4 }}
+        onUpdate={noop}
       >
         — Bhagavad Gita, 2.47
       </motion.p>
@@ -174,6 +187,7 @@ function VerseCounter({ totalDuration, phase }: { totalDuration: number; phase: 
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        onUpdate={noop}
         style={{ background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.3), transparent)" }}
       />
 
@@ -193,6 +207,7 @@ function VerseCounter({ totalDuration, phase }: { totalDuration: number; phase: 
               delay: philoDelays[i],
               ease: [0.22, 1, 0.36, 1],
             }}
+            onUpdate={noop}
           >
             {line}
           </motion.span>
@@ -205,6 +220,7 @@ function VerseCounter({ totalDuration, phase }: { totalDuration: number; phase: 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.5 }}
+        onUpdate={noop}
       >
         {String(count).padStart(3, "\u00A0")}
       </motion.span>
@@ -249,6 +265,7 @@ export default function Preloader({ onReveal }: { onReveal?: () => void }) {
           className="fixed inset-0 z-[999] bg-[#010101] overflow-hidden"
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
+          onUpdate={noop}
           style={{ WebkitBackfaceVisibility: "hidden", backfaceVisibility: "hidden", WebkitTransform: "translateZ(0)" }}
         >
           {/* OPTICAL CENTERING WRAPPER (Shifts content up on tall mobile screens) */}
@@ -267,6 +284,7 @@ export default function Preloader({ onReveal }: { onReveal?: () => void }) {
                   opacity: [0.5, 1, 0.5],
                 }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                onUpdate={noop}
                 style={{
                   width: "12px",
                   height: "12px",
@@ -284,6 +302,7 @@ export default function Preloader({ onReveal }: { onReveal?: () => void }) {
                 initial={{ width: 10, height: 10, opacity: 0.9 }}
                 animate={{ width: "250vmax", height: "250vmax", opacity: 0 }}
                 transition={{ duration: 1.2, ease: "easeOut" }}
+                onUpdate={noop}
                 style={{
                   border: "1px solid #D4AF37",
                   boxShadow: "0 0 40px rgba(212,175,55,0.4), inset 0 0 40px rgba(212,175,55,0.2)",
@@ -313,11 +332,13 @@ export default function Preloader({ onReveal }: { onReveal?: () => void }) {
                       : { rotate: { duration: 5, ease: "linear" } }
                 }
                 initial={{ rotate: 0 }}
+                onUpdate={noop}
               >
                 <svg viewBox="0 0 1000 1000" className="w-full h-full">
                   {/* ORIGIN POINT */}
                   <motion.circle cx="500" cy="500" r="4" fill="#D4AF37"
                     initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.3 }}
+                    onUpdate={noop}
                   />
 
                   {/* PHASE 1: CIRCLES — SLOW to FAST (exponential speed ramp) */}
@@ -354,6 +375,7 @@ export default function Preloader({ onReveal }: { onReveal?: () => void }) {
                   <motion.circle cx="500" cy="500" r="10" fill="#D4AF37"
                     initial={{ opacity: 0 }} animate={{ opacity: 0.9 }}
                     transition={{ duration: 0.2, delay: 3.7 }}
+                    onUpdate={noop}
                   />
                 </svg>
               </motion.div>
@@ -367,6 +389,7 @@ export default function Preloader({ onReveal }: { onReveal?: () => void }) {
                 animate={{ opacity: 1, scale: 1, filter: "none" }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
+                onUpdate={noop}
                 style={{ WebkitBackfaceVisibility: "hidden", backfaceVisibility: "hidden" }}
               >
                 {/* BRAND NAME */}
@@ -409,6 +432,7 @@ export default function Preloader({ onReveal }: { onReveal?: () => void }) {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
+                  onUpdate={noop}
                 >
                   Action is the seed. Result is the fruit.{" "}
                   <span className="text-white/90 font-bold">We architect both.</span>
@@ -430,6 +454,7 @@ export default function Preloader({ onReveal }: { onReveal?: () => void }) {
                   : { opacity: 0.12 }
             }
             transition={{ duration: phase === "flash" ? 0.3 : 0.8, delay: phase === "draw" ? 0.5 : 0 }}
+            onUpdate={noop}
             style={{
               width: "400px",
               height: "400px",

@@ -3,6 +3,9 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
+// No-op handler: forces Framer Motion JS engine instead of WAAPI (Safari iOS blink fix)
+const noop = () => { };
+
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -13,6 +16,15 @@ function useIsMobile() {
     return () => mq.removeEventListener("change", handler);
   }, []);
   return isMobile;
+}
+
+function useIsIOS() {
+  const [isIOS, setIsIOS] = useState(false);
+  useEffect(() => {
+    const ua = navigator.userAgent;
+    setIsIOS(/iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1));
+  }, []);
+  return isIOS;
 }
 
 const GeometrySVG = ({ className }: { className?: string }) => (
@@ -55,6 +67,10 @@ const GeometrySVG = ({ className }: { className?: string }) => (
 
 export default function SacredGeometry() {
   const isMobile = useIsMobile();
+  const isIOS = useIsIOS();
+
+  // Three-tier opacity: Desktop 0.20, iOS mobile 0.35, Android/other mobile 0.45
+  const targetOpacity = isMobile ? (isIOS ? 0.55 : 0.50) : 0.25;
 
   return (
     <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden flex items-center justify-center">
@@ -62,8 +78,9 @@ export default function SacredGeometry() {
       <motion.div
         className="w-[140vh] h-[140vh] opacity-[0.04]"
         initial={{ opacity: 0, rotate: -10 }}
-        animate={{ opacity: isMobile ? 0.50 : 0.20, rotate: 0 }}
+        animate={{ opacity: targetOpacity, rotate: 0 }}
         transition={{ duration: 4, delay: 1, ease: "easeOut" }}
+        onUpdate={noop}
       >
         <GeometrySVG className="w-full h-full" />
       </motion.div>

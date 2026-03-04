@@ -7,6 +7,9 @@ import SacredGeometry from "./SacredGeometry";
 import ServiceTeaser from "./ServiceTeaser";
 import MagneticButton from "./MagneticButton";
 
+// No-op handler: forces Framer Motion JS engine instead of WAAPI (Safari iOS blink fix)
+const noop = () => { };
+
 const DivineTorch = dynamic(() => import("./DivineTorch"), { ssr: false });
 const SmoothScroll = dynamic(() => import("./SmoothScroll"), { ssr: false });
 const Preloader = dynamic(() => import("./Preloader"), { ssr: false });
@@ -173,6 +176,7 @@ export default function MonolithHero() {
             className="absolute z-[1] pointer-events-none w-[80vw] h-[80vw] md:w-[900px] md:h-[900px]"
             animate={{ opacity: [0.08, 0.15, 0.08], scale: [1, 1.08, 1] }}
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            onUpdate={noop}
             style={{
               top: "50%",
               left: "50%",
@@ -192,6 +196,7 @@ export default function MonolithHero() {
               initial={{ scaleX: 0, opacity: 0 }}
               animate={revealed ? { scaleX: 1, opacity: 1 } : {}}
               transition={{ duration: 1.5, delay: d(0.5), ease: [0.16, 1, 0.3, 1] }}
+              onUpdate={noop}
               className="w-32 md:w-64 h-[1px] mb-10"
               style={{ background: "linear-gradient(90deg, transparent, #D4AF37, transparent)" }}
             />
@@ -201,6 +206,7 @@ export default function MonolithHero() {
               initial={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
               animate={revealed ? { opacity: 1, scale: 1, filter: "none" } : {}}
               transition={{ duration: 2, delay: d(0.8), ease: "easeOut" }}
+              onUpdate={noop}
               className="flex flex-col items-center overflow-visible"
               style={{ WebkitBackfaceVisibility: "hidden", backfaceVisibility: "hidden", WebkitTransform: "translateZ(0)" }}
             >
@@ -240,6 +246,7 @@ export default function MonolithHero() {
                   initial={{ scale: 0, opacity: 0 }}
                   animate={revealed ? { scale: 1, opacity: 1 } : {}}
                   transition={{ duration: 0.6, delay: d(1.5), ease: "easeOut" }}
+                  onUpdate={noop}
                   className="rounded-full bg-white flex-shrink-0"
                   style={{
                     width: "clamp(0.5rem, 1.25vw, 0.75rem)",
@@ -278,6 +285,7 @@ export default function MonolithHero() {
                     visible: { opacity: 1, y: 0 },
                   }}
                   transition={{ duration: 0.4, delay: d(1.8 + i * 0.04), ease: "easeOut" }}
+                  onUpdate={noop}
                 >
                   {char === " " ? "\u00A0" : char}
                 </motion.span>
@@ -289,6 +297,7 @@ export default function MonolithHero() {
               initial={{ opacity: 0 }}
               animate={revealed ? { opacity: 0.9 } : {}}
               transition={{ duration: 1, delay: d(3) }}
+              onUpdate={noop}
               className="text-[clamp(0.5rem,1.2vw,0.875rem)] tracking-[clamp(0.05em,0.3vw,0.3em)] font-[var(--font-cinzel)] text-[#C0C0C0] uppercase mt-4 text-center whitespace-nowrap"
             >
               Brands · Websites · Apps · AI · Decentralized Systems
@@ -302,12 +311,14 @@ export default function MonolithHero() {
           initial={{ opacity: 0 }}
           animate={revealed ? { opacity: 1 } : {}}
           transition={{ delay: d(4), duration: 1 }}
+          onUpdate={noop}
           className="absolute bottom-10 z-20 flex flex-col items-center gap-2 left-1/2 -translate-x-1/2"
         >
           <span className="text-[10px] md:text-xs font-[var(--font-mono)] text-[#D4AF37] tracking-[0.4em] uppercase" style={{ textShadow: "0 0 10px rgba(212,175,55,0.4)" }}>Scroll</span>
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            onUpdate={noop}
             className="w-[1px] h-10 bg-gradient-to-b from-[#D4AF37] to-transparent"
             style={{ boxShadow: "0 0 6px rgba(212,175,55,0.3)" }}
           />
@@ -327,6 +338,7 @@ export default function MonolithHero() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 1 }}
+          onUpdate={noop}
           className="flex flex-col items-center gap-10 px-6"
         >
           {/* MANIFESTO */}
@@ -335,6 +347,7 @@ export default function MonolithHero() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1, delay: 0.2 }}
+            onUpdate={noop}
             className="text-xl sm:text-2xl md:text-4xl font-[var(--font-cinzel)] font-bold text-white text-center tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.3em]"
           >
             We don&apos;t build ordinary brands.
@@ -344,6 +357,7 @@ export default function MonolithHero() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1, delay: 0.5 }}
+            onUpdate={noop}
             className="text-sm sm:text-base md:text-lg font-[var(--font-cinzel)] text-[#C0C0C0] text-center max-w-xl leading-relaxed tracking-wide"
           >
             We architect <span className="text-[#D4AF37] font-bold">extraordinary</span> ones — identities so refined, they don&apos;t compete. They <span className="text-white font-semibold">transcend</span>.
@@ -353,6 +367,7 @@ export default function MonolithHero() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1, delay: 0.8 }}
+            onUpdate={noop}
             className="text-xs md:text-sm font-[var(--font-cinzel)] text-[#C0C0C0]/60 text-center max-w-md tracking-[0.1em]"
           >
             If you&apos;re serious about standing out — we&apos;re about to change the game.
@@ -364,6 +379,7 @@ export default function MonolithHero() {
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1.2, delay: 1 }}
+            onUpdate={noop}
             className="w-24 md:w-40 h-[1px]"
             style={{ background: "linear-gradient(90deg, transparent, #D4AF37, transparent)" }}
           />
@@ -396,6 +412,7 @@ export default function MonolithHero() {
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1.2, delay: 0.3 }}
+            onUpdate={noop}
             className="w-24 md:w-40 h-[1px]"
             style={{ background: "linear-gradient(90deg, transparent, #D4AF37, transparent)" }}
           />
@@ -435,6 +452,7 @@ export default function MonolithHero() {
                     <motion.span
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      onUpdate={noop}
                       className="inline-block w-4 h-4 border-2 border-[#010101] border-t-transparent rounded-full"
                     />
                   ) : "Notify Me"}
@@ -444,6 +462,7 @@ export default function MonolithHero() {
                   <motion.p
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
+                    onUpdate={noop}
                     className="absolute -bottom-8 left-0 right-0 text-center text-[10px] font-[var(--font-mono)] text-red-400 tracking-wider"
                   >
                     {formMessage}
@@ -454,6 +473,7 @@ export default function MonolithHero() {
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
+                onUpdate={noop}
                 className="glass-morphism px-8 py-4 rounded-full flex items-center gap-3"
               >
                 {/* GOLD CHECKMARK */}
@@ -467,6 +487,7 @@ export default function MonolithHero() {
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
+                    onUpdate={noop}
                   />
                 </svg>
                 <p className="text-sm font-[var(--font-cinzel)] text-[#D4AF37] tracking-[0.15em]">
