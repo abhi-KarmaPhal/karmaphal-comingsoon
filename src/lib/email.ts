@@ -272,6 +272,7 @@ export async function sendWelcomeEmail(to: string): Promise<boolean> {
       from: `"KarmaPhal" <${process.env.SMTP_USER}>`,
       to,
       subject: "You're in · KarmaPhal",
+      text: "You're in.\n\nYour brand deserves to be extraordinary. That's exactly what we build. We build brands that make people stop scrolling. Identities that command attention. Digital experiences so refined, your competitors wonder who's behind them.\n\nIf you're here, you already know — ordinary doesn't cut it. You want a brand that doesn't just exist, it transcends.\n\nWhat We Architect: Brands · Websites · Apps · AI · Decentralized Systems\n\nReady to take your brand seriously? We're launching soon. When we do, you'll be first in line.\n\nAction is the seed. Result is the fruit. We architect both.\n\nTalk To Us: abhi@karmaphal.in",
       html: buildWelcomeHTML(),
     });
     console.log(`✅ Welcome email sent to ${to}`);
