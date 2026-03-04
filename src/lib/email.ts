@@ -224,11 +224,11 @@ function buildWelcomeHTML(): string {
               <table role="presentation" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="padding:0 12px;">
-                    <a href="https://www.linkedin.com/company/krmaphal" target="_blank" style="color:#666;text-decoration:none;font-size:11px;letter-spacing:2px;">LinkedIn</a>
+                    <a href="https://www.linkedin.com/company/houseofkarmaphal/" target="_blank" style="color:#666;text-decoration:none;font-size:11px;letter-spacing:2px;">LinkedIn</a>
                   </td>
                   <td style="color:#333;font-size:10px;">·</td>
                   <td style="padding:0 12px;">
-                    <a href="https://instagram.com/krmaphal" target="_blank" style="color:#666;text-decoration:none;font-size:11px;letter-spacing:2px;">Instagram</a>
+                    <a href="https://www.instagram.com/houseofkarmaphal/" target="_blank" style="color:#666;text-decoration:none;font-size:11px;letter-spacing:2px;">Instagram</a>
                   </td>
                   <td style="color:#333;font-size:10px;">·</td>
                   <td style="padding:0 12px;">

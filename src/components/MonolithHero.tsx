@@ -423,6 +423,7 @@ export default function MonolithHero() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="YOUR EMAIL"
                   required
+                  autoComplete="new-password"
                   disabled={formState === "loading"}
                   className="bg-transparent border-none outline-none px-4 md:px-6 py-3.5 text-[11px] md:text-xs font-[var(--font-mono)] w-full text-[#E0E0E0] placeholder:text-[#C0C0C0]/40 tracking-widest disabled:opacity-50"
                 />
