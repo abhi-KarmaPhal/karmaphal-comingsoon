@@ -51,7 +51,7 @@ function randomEmber(W: number, H: number): Ember {
 
 export default function DivineEmbers({ revealed, count = 18 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animRef   = useRef<number>(0);
+  const animRef = useRef<number>(0);
   const embersRef = useRef<Ember[]>([]);
   const revealedRef = useRef(false);
 
@@ -66,8 +66,29 @@ export default function DivineEmbers({ revealed, count = 18 }: Props) {
 
     let W = 0, H = 0;
 
+    // PRE-RENDER GLOW TO OFFSCREEN CANVAS
+    // Calculating radial gradients 60 times/sec per particle kills Safari performance.
+    // Instead, we render the 'ideal' ember once offscreen and stamp it via drawImage.
+    const offCanvas = document.createElement("canvas");
+    const glowRadius = 40;
+    offCanvas.width = glowRadius * 2;
+    offCanvas.height = glowRadius * 2;
+    const offCtx = offCanvas.getContext("2d")!;
+    const grd = offCtx.createRadialGradient(glowRadius, glowRadius, 0, glowRadius, glowRadius, glowRadius);
+    grd.addColorStop(0, "rgba(212,175,55,1)");
+    grd.addColorStop(0.4, "rgba(212,175,55,0.4)");
+    grd.addColorStop(1, "rgba(212,175,55,0)");
+    offCtx.fillStyle = grd;
+    offCtx.fillRect(0, 0, glowRadius * 2, glowRadius * 2);
+
+    // Core bright dot
+    offCtx.beginPath();
+    offCtx.arc(glowRadius, glowRadius, glowRadius * 0.17, 0, Math.PI * 2);
+    offCtx.fillStyle = "rgba(255,240,180,1)";
+    offCtx.fill();
+
     const resize = () => {
-      W = canvas.width  = window.innerWidth;
+      W = canvas.width = window.innerWidth;
       H = canvas.height = window.innerHeight;
     };
     window.addEventListener("resize", resize);
@@ -90,10 +111,13 @@ export default function DivineEmbers({ revealed, count = 18 }: Props) {
       // Update + draw
       embersRef.current = embersRef.current.filter(e => e.y > -20);
 
+      // NATIVE CANVAS BLEND MODE (Thousands of times faster than CSS mix-blend-mode)
+      ctx.globalCompositeOperation = "screen";
+
       for (const e of embersRef.current) {
         // Move
-        e.x  += e.vx + Math.sin(e.life * 4) * 0.15; // gentle sinusoidal sway
-        e.y  -= e.vy;
+        e.x += e.vx + Math.sin(e.life * 4) * 0.15; // gentle sinusoidal sway
+        e.y -= e.vy;
         e.life += e.vy / H;
 
         // Fade in over first 15% of life, hold, fade out last 25%
@@ -105,23 +129,14 @@ export default function DivineEmbers({ revealed, count = 18 }: Props) {
           e.opacity = e.maxOpacity;
         }
 
-        // Glow
-        const grd = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, e.size * 3.5);
-        grd.addColorStop(0, `rgba(212,175,55,${e.opacity})`);
-        grd.addColorStop(0.4, `rgba(212,175,55,${e.opacity * 0.4})`);
-        grd.addColorStop(1, "rgba(212,175,55,0)");
-
-        ctx.beginPath();
-        ctx.arc(e.x, e.y, e.size * 3.5, 0, Math.PI * 2);
-        ctx.fillStyle = grd;
-        ctx.fill();
-
-        // Core dot
-        ctx.beginPath();
-        ctx.arc(e.x, e.y, e.size * 0.6, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,240,180,${e.opacity * 1.2})`;
-        ctx.fill();
+        // Draw cached ember applying opacity via globalAlpha
+        ctx.globalAlpha = e.opacity;
+        const renderSize = e.size * 3.5;
+        // The offCanvas glowRadius is 40. We scale it down to match the ember's dynamic size.
+        ctx.drawImage(offCanvas, e.x - renderSize, e.y - renderSize, renderSize * 2, renderSize * 2);
       }
+      // Reset alpha for safety
+      ctx.globalAlpha = 1.0;
     };
 
     animRef.current = requestAnimationFrame(tick);
@@ -136,7 +151,6 @@ export default function DivineEmbers({ revealed, count = 18 }: Props) {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 z-[3] pointer-events-none"
-      style={{ mixBlendMode: "screen" }}
     />
   );
 }

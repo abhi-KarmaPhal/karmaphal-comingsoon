@@ -236,12 +236,11 @@ export default function Preloader({ onReveal }: { onReveal?: () => void }) {
   useEffect(() => {
     const t1 = setTimeout(() => setPhase("flash"), 5200);
     const t2 = setTimeout(() => setPhase("collapse"), 5600);
-    const t3 = setTimeout(() => setPhase("brand"), 6000);
-    const t4 = setTimeout(() => {
+    const t3 = setTimeout(() => {
       setPhase("done");
       if (onReveal) onReveal();
-    }, 7200);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
+    }, 6400); // 800ms after collapse starts, ending the preloader
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, [onReveal]);
 
   // Lock scrolling while preloader is active
@@ -382,65 +381,7 @@ export default function Preloader({ onReveal }: { onReveal?: () => void }) {
             )}
 
             {/* ── BRAND NAME + PHILOSOPHY (after collapse) ── */}
-            {phase === "brand" && (
-              <motion.div
-                className="absolute flex flex-col items-center gap-5"
-                initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
-                animate={{ opacity: 1, scale: 1, filter: "none" }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                onUpdate={noop}
-                style={{ WebkitBackfaceVisibility: "hidden", backfaceVisibility: "hidden" }}
-              >
-                {/* BRAND NAME */}
-                <div className="flex items-baseline gap-2 md:gap-3">
-                  <span
-                    className="text-4xl md:text-7xl font-[var(--font-gotu)]"
-                    style={{
-                      background: "linear-gradient(180deg, #FFF 0%, #F9E2AF 30%, #D4AF37 60%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                      filter: "drop-shadow(0 0 40px rgba(212,175,55,0.5))",
-                      lineHeight: 1.4,
-                      paddingTop: "0.3em",
-                    }}
-                  >
-                    कर्म
-                  </span>
-                  <span
-                    className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white mb-2 md:mb-3 flex-shrink-0"
-                    style={{ boxShadow: "0 0 15px #D4AF37" }}
-                  />
-                  <span
-                    className="text-3xl md:text-6xl font-[var(--font-cinzel)] font-black uppercase tracking-[0.1em]"
-                    style={{
-                      background: "linear-gradient(180deg, #FFF 0%, #F9E2AF 30%, #D4AF37 60%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                      filter: "drop-shadow(0 0 40px rgba(212,175,55,0.5))",
-                    }}
-                  >
-                    Phal
-                  </span>
-                </div>
-
-                {/* PHILOSOPHY UNDER BRAND */}
-                <motion.p
-                  className="text-[10px] md:text-xs font-[var(--font-cinzel)] tracking-[0.25em] text-[#C0C0C0]/70 text-center"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  onUpdate={noop}
-                >
-                  Action is the seed. Result is the fruit.{" "}
-                  <span className="text-white/90 font-bold">We architect both.</span>
-                </motion.p>
-              </motion.div>
-            )}
-
-          </div> {/* END OPTICAL CENTERING WRAPPER */}
+          </div> END OPTICAL CENTERING WRAPPER
 
           {/* ── AMBIENT GLOW (Outside centering wrapper because it's absolute fixed anyway) ── */}
           <motion.div
