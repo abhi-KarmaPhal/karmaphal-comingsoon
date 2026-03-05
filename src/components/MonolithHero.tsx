@@ -6,6 +6,8 @@ import dynamic from "next/dynamic";
 import SacredGeometry from "./SacredGeometry";
 import ServiceTeaser from "./ServiceTeaser";
 import MagneticButton from "./MagneticButton";
+import AmbientSanskrit from "./AmbientSanskrit";
+import DivineEmbers from "./DivineEmbers";
 
 // No-op handler: forces Framer Motion JS engine instead of WAAPI (Safari iOS blink fix)
 const noop = () => { };
@@ -150,6 +152,7 @@ export default function MonolithHero() {
       <Preloader onReveal={handleReveal} />
       <SmoothScroll />
       <DivineTorch />
+      <DivineEmbers revealed={revealed} />
 
       {/* GRAIN TEXTURE OVERLAY (entire page) */}
       <div
@@ -170,6 +173,7 @@ export default function MonolithHero() {
 
           {/* SACRED GEOMETRY — only mount after preloader exits, freeing iOS GPU during loading */}
           {revealed && <SacredGeometry />}
+          {revealed && <AmbientSanskrit />}
 
           {/* AMBIENT BREATHING GLOW */}
           <motion.div
