@@ -18,7 +18,7 @@ const noop = () => { };
  */
 
 const WORDS = [
-  { text: "धर्म", size: "8rem", x: "8%", y: "12%", rot: -12, delay: 0.5, dur: 22 },
+  { text: "कर्म", size: "8rem", x: "8%", y: "12%", rot: -12, delay: 0.5, dur: 22 },
   { text: "सत्यम्", size: "5rem", x: "78%", y: "8%", rot: 8, delay: 1.2, dur: 28 },
   { text: "ॐ", size: "11rem", x: "88%", y: "55%", rot: 0, delay: 0.2, dur: 34 },
   { text: "तपस्", size: "4.5rem", x: "5%", y: "72%", rot: 15, delay: 2.0, dur: 26 },
