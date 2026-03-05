@@ -49,7 +49,7 @@ export default function AmbientSanskrit() {
           // Entrance
           initial={{ opacity: 0, rotate: word.rot - 4, scale: 0.92 }}
           animate={{
-            opacity: [0, 0.028, 0.018, 0.032, 0.02],
+            opacity: [0, 0.028, 0.018, 0.05, 0.02],
             rotate: [word.rot - 4, word.rot, word.rot + 3, word.rot - 1, word.rot],
             y: [0, -18, -6, -22, 0],
             scale: [0.92, 1, 1.02, 0.98, 1],
