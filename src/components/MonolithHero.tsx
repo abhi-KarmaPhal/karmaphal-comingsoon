@@ -210,7 +210,7 @@ export default function MonolithHero() {
               initial={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
               animate={revealed ? { opacity: 1, scale: 1, filter: "none" } : {}}
               transition={{ duration: 2, delay: d(0.8), ease: "easeOut" }}
-              onUpdate={noop}
+
               className="flex flex-col items-center overflow-visible"
               style={{ WebkitBackfaceVisibility: "hidden", backfaceVisibility: "hidden", WebkitTransform: "translateZ(0)", willChange: "transform, filter, opacity" }}
             >
@@ -403,9 +403,9 @@ export default function MonolithHero() {
                 <span className="text-2xl md:text-4xl text-[#D4AF37]/30 font-thin select-none">:</span>
                 <CountdownUnit value={countdown.hours} label="Hours" />
                 <span className="text-2xl md:text-4xl text-[#D4AF37]/30 font-thin select-none">:</span>
-                <CountdownUnit value={countdown.minutes} label="Min" />
+                <CountdownUnit value={countdown.minutes} label="Mins" />
                 <span className="text-2xl md:text-4xl text-[#D4AF37]/30 font-thin select-none">:</span>
-                <CountdownUnit value={countdown.seconds} label="Sec" />
+                <CountdownUnit value={countdown.seconds} label="Secs" />
               </>
             )}
           </div>
@@ -537,7 +537,7 @@ export default function MonolithHero() {
           </a>
         </div>
 
-        <p className="text-[10px] font-[var(--font-mono)] text-[#C0C0C0]/30 tracking-[0.3em]">
+        <p className="text-[10px] font-[var(--font-mono)] text-[#C0C0C0]/30 tracking-[0.3em] text-center">
           © 2026 KARMAPHAL · ALL RIGHTS RESERVED
         </p>
       </footer>
