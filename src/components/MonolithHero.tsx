@@ -212,7 +212,7 @@ export default function MonolithHero() {
               transition={{ duration: 2, delay: d(0.8), ease: "easeOut" }}
               onUpdate={noop}
               className="flex flex-col items-center overflow-visible"
-              style={{ WebkitBackfaceVisibility: "hidden", backfaceVisibility: "hidden", WebkitTransform: "translateZ(0)" }}
+              style={{ WebkitBackfaceVisibility: "hidden", backfaceVisibility: "hidden", WebkitTransform: "translateZ(0)", willChange: "transform, filter, opacity" }}
             >
               {/* SVG FILTER FOR BRUSHED METAL TEXTURE */}
               <svg style={{ position: "absolute", width: 0, height: 0 }}>
