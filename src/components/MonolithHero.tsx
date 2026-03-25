@@ -76,7 +76,7 @@ function CountdownUnit({ value, label }: { value: number; label: string }) {
 
 /* ── MAIN ── */
 export default function MonolithHero() {
-  const { timeLeft: countdown, mounted } = useCountdown(new Date("2026-03-25T017:55:00+05:30").getTime());
+  const { timeLeft: countdown, mounted } = useCountdown(new Date("2026-03-26T09:00:00+05:30").getTime());
   const [email, setEmail] = useState("");
   const [formState, setFormState] = useState<"idle" | "loading" | "success" | "duplicate" | "error">("idle");
   const [formMessage, setFormMessage] = useState("");
